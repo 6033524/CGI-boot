@@ -1,0 +1,60 @@
+<div class="worldcups-container">
+  <div class="worldcups-header">
+    <h2>World Cups</h2>
+    <p class="subtitle">World Cup tournaments from 1930 to 2014</p>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading World Cup data...</p>
+  </div>
+
+  <div *ngIf="error && !loading" class="error-container">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error }}</p>
+  </div>
+
+  <div *ngIf="!loading && !error && worldcups.length > 0" class="worldcups-grid">
+    <div *ngFor="let wc of worldcups" class="wc-card">
+      <div class="wc-header">
+        <h3>World Cup #{{ wc.id }}</h3>
+        <p class="country">{{ wc.country }}</p>
+      </div>
+
+      <div class="wc-results">
+        <div class="result-item">
+          <span class="label">Winner</span>
+          <span class="value">{{ wc.winner }}</span>
+        </div>
+        <div class="result-item">
+          <span class="label">Runners-up</span>
+          <span class="value">{{ wc.runners_up }}</span>
+        </div>
+        <div class="result-item">
+          <span class="label">3rd Place</span>
+          <span class="value">{{ wc.third }}</span>
+        </div>
+      </div>
+
+      <div class="wc-stats">
+        <div class="stat">
+          <mat-icon>sports_soccer</mat-icon>
+          <span>{{ wc.goalsscored }} Goals</span>
+        </div>
+        <div class="stat">
+          <mat-icon>groups</mat-icon>
+          <span>{{ wc.qualifiedteams }} Teams</span>
+        </div>
+        <div class="stat">
+          <mat-icon>sports_score</mat-icon>
+          <span>{{ wc.matchesplayed }} Matches</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && !error && worldcups.length === 0" class="no-data-container">
+    <mat-icon>search_off</mat-icon>
+    <p>No World Cup data found</p>
+  </div>
+</div>

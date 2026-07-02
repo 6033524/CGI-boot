@@ -1,0 +1,19 @@
+<header class="app-header">
+  <div class="header-container">
+    <div class="logo">
+      <h1>⚽ {{ title }}</h1>
+    </div>
+    <nav class="navigation">
+      <a *ngFor="let link of navLinks" 
+         [routerLink]="link.route" 
+         routerLinkActive="active"
+         class="nav-link">
+        <span>{{ link.label }}</span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main class="app-main">
+  <router-outlet></router-outlet>
+</main>

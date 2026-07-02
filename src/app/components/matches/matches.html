@@ -1,0 +1,101 @@
+<div class="matches-container">
+  <div class="matches-header">
+    <h2>Football Matches</h2>
+    <p class="subtitle">Browse all World Cup matches from 1930 to 2014</p>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <div class="filter-group">
+      <mat-form-field>
+        <mat-label>Select Year</mat-label>
+        <mat-select [value]="selectedYear" (selectionChange)="onYearChange($event)">
+          <mat-option [value]="null">All Years</mat-option>
+          <mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Select Stage</mat-label>
+        <mat-select [value]="selectedStage" (selectionChange)="onStageChange($event)">
+          <mat-option value="">All Stages</mat-option>
+          <mat-option *ngFor="let stage of stages" [value]="stage">{{ stage }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-stroked-button (click)="resetFilters()">
+        <mat-icon>refresh</mat-icon>
+        Reset Filters
+      </button>
+    </div>
+
+    <div class="results-count">
+      Showing {{ filteredMatches.length }} of {{ matches.length }} matches
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading matches data...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-container">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error }}</p>
+    <button mat-raised-button (click)="loadMatches()">Try Again</button>
+  </div>
+
+  <!-- Matches Table -->
+  <div *ngIf="!loading && !error && filteredMatches.length > 0" class="matches-table">
+    <table mat-table [dataSource]="filteredMatches">
+      <!-- Year Column -->
+      <ng-container matColumnDef="year">
+        <th mat-header-cell *matHeaderCellDef>Year</th>
+        <td mat-cell *matCellDef="let match">{{ match.year }}</td>
+      </ng-container>
+
+      <!-- Stage Column -->
+      <ng-container matColumnDef="stage">
+        <th mat-header-cell *matHeaderCellDef>Stage</th>
+        <td mat-cell *matCellDef="let match">
+          <span class="stage-badge">{{ match.stage }}</span>
+        </td>
+      </ng-container>
+
+      <!-- City Column -->
+      <ng-container matColumnDef="city">
+        <th mat-header-cell *matHeaderCellDef>City</th>
+        <td mat-cell *matCellDef="let match">{{ match.city }}</td>
+      </ng-container>
+
+      <!-- Teams Column -->
+      <ng-container matColumnDef="teams">
+        <th mat-header-cell *matHeaderCellDef>Teams</th>
+        <td mat-cell *matCellDef="let match">
+          {{ match.home_team_name }} vs {{ match.away_team_name }}
+        </td>
+      </ng-container>
+
+      <!-- Score Column -->
+      <ng-container matColumnDef="score">
+        <th mat-header-cell *matHeaderCellDef>Score</th>
+        <td mat-cell *matCellDef="let match">
+          <span class="score">{{ match.home_team_goals }} - {{ match.away_team_goals }}</span>
+          <span [ngClass]="'result-' + getResult(match).toLowerCase()">{{ getResult(match) }}</span>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="match-row"></tr>
+    </table>
+  </div>
+
+  <!-- No Data State -->
+  <div *ngIf="!loading && !error && filteredMatches.length === 0" class="no-data-container">
+    <mat-icon>search_off</mat-icon>
+    <p>No matches found for the selected filters</p>
+    <button mat-raised-button (click)="resetFilters()">Clear Filters</button>
+  </div>
+</div>

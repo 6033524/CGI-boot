@@ -1,0 +1,47 @@
+<div class="countries-container">
+  <div class="countries-header">
+    <h2>Countries & Cities</h2>
+    <p class="subtitle">World Cup host cities and locations</p>
+  </div>
+
+  <!-- Search -->
+  <div class="search-section">
+    <mat-form-field class="search-field">
+      <mat-label>Search by country or city</mat-label>
+      <input matInput [value]="searchTerm" (input)="onSearchInput($event)" placeholder="e.g., Brazil, Rio">
+      <button mat-icon-button matSuffix *ngIf="searchTerm" (click)="resetSearch()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading countries data...</p>
+  </div>
+
+  <div *ngIf="error && !loading" class="error-container">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error }}</p>
+  </div>
+
+  <div *ngIf="!loading && !error && filteredCountries.length > 0" class="countries-grid">
+    <div *ngFor="let country of filteredCountries" class="country-card">
+      <div class="country-flag">{{ country.country.charAt(0) }}</div>
+      <div class="country-info">
+        <h3>{{ country.city }}</h3>
+        <p class="country-name">{{ country.country }}</p>
+        <div class="coordinates">
+          <span>{{ country.lat?.toFixed(4) }}°</span>
+          <span>{{ country.lng?.toFixed(4) }}°</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && !error && filteredCountries.length === 0" class="no-data-container">
+    <mat-icon>search_off</mat-icon>
+    <p>No countries found</p>
+    <button mat-raised-button (click)="resetSearch()">Clear Search</button>
+  </div>
+</div>

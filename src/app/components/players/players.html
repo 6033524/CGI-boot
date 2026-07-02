@@ -1,0 +1,65 @@
+<div class="players-container">
+  <div class="players-header">
+    <h2>Players</h2>
+    <p class="subtitle">Browse legendary World Cup players</p>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <div class="filter-group">
+      <mat-form-field>
+        <mat-label>Filter by Team</mat-label>
+        <mat-select [value]="selectedTeam" (selectionChange)="onTeamChange($event)">
+          <mat-option value="">All Teams</mat-option>
+          <mat-option *ngFor="let team of teams" [value]="team">{{ team }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Filter by Position</mat-label>
+        <mat-select [value]="selectedPosition" (selectionChange)="onPositionChange($event)">
+          <mat-option value="">All Positions</mat-option>
+          <mat-option *ngFor="let position of positions" [value]="position">{{ position }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-stroked-button (click)="resetFilters()">
+        <mat-icon>refresh</mat-icon>
+        Reset
+      </button>
+    </div>
+    <div class="results-count">{{ filteredPlayers.length }} of {{ players.length }} players</div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading players data...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-container">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Players Grid -->
+  <div *ngIf="!loading && !error && filteredPlayers.length > 0" class="players-grid">
+    <div *ngFor="let player of filteredPlayers" class="player-card">
+      <div class="player-number">{{ player.shirtnumber }}</div>
+      <div class="player-content">
+        <h3>{{ player.playername }}</h3>
+        <p class="team">{{ player.team_initials }}</p>
+        <p class="position">{{ player.position }}</p>
+        <p class="coach">Coach: {{ player.coach_name }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Data State -->
+  <div *ngIf="!loading && !error && filteredPlayers.length === 0" class="no-data-container">
+    <mat-icon>search_off</mat-icon>
+    <p>No players found</p>
+    <button mat-raised-button (click)="resetFilters()">Clear Filters</button>
+  </div>
+</div>
